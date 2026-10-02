@@ -146,7 +146,7 @@ export default function NewProofPage() {
             <Field label="Explicit claim" hint="One falsifiable sentence: what exactly did you do?">
               <textarea value={claim} onChange={(e) => setClaim(e.target.value)} className={`${inputCls} min-h-[90px]`} placeholder="I designed and deployed an AI-powered website for a bakery in Lagos." maxLength={2000} />
             </Field>
-            <AiAssist mode="summarize_claim" getInput={() => ({ claim, category, description })} />
+            <AiAssist mode="summarize_claim" input={{ claim, category, description }} />
           </div>
           <Field label="Description (optional)">
             <textarea value={description} onChange={(e) => setDescription(e.target.value)} className={`${inputCls} min-h-[90px]`} placeholder="More context about the work…" maxLength={5000} />
@@ -217,7 +217,7 @@ export default function NewProofPage() {
             <button onClick={addEvidence} disabled={busy} className={`${btnGhost} mt-5`}>
               {busy ? "Adding…" : "+ Add evidence"}
             </button>
-            <AiAssist mode="suggest_evidence" getInput={() => ({ claim, category, evidence })} />
+            <AiAssist mode="suggest_evidence" input={{ claim, category, evidence }} />
           </GlassCard>
 
           {evidence.length > 0 && (

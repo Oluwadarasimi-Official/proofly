@@ -10,7 +10,7 @@ const LABELS: Record<string, string> = {
 };
 
 /** Renders nothing at all when AI is not configured server-side. */
-export default function AiAssist({ mode, getInput }: { mode: string; getInput: () => Record<string, unknown> }) {
+export default function AiAssist({ mode, input }: { mode: string; input: Record<string, unknown> }) {
   const [enabled, setEnabled] = useState(false);
   const [checked, setChecked] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -33,7 +33,7 @@ export default function AiAssist({ mode, getInput }: { mode: string; getInput: (
       const res = await fetch("/api/ai/assist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mode, ...getInput() }),
+        body: JSON.stringify({ mode, ...input }),
       });
       const d = await res.json();
       if (!res.ok) throw new Error(d.error ?? "AI request failed");

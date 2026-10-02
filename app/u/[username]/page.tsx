@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { supabaseServer } from "@/lib/supabase-server";
-import { siteUrl } from "@/lib/site";
+import { requestOrigin } from "@/lib/site-server";
 import { GlassCard, EmptyState } from "@/components/ui";
 import ProofCard from "@/components/ProofCard";
 import { CopyLinkButton } from "@/components/proof-actions";
@@ -30,6 +30,7 @@ export default async function PublicProfilePage({ params }: Ctx) {
 
   const verified = (proofs ?? []).filter((p) => p.status === "VERIFIED").length;
   const social = (profile.social_links ?? {}) as Record<string, string>;
+  const origin = await requestOrigin();
 
   return (
     <div className="mx-auto max-w-5xl animate-fade-up">
@@ -46,7 +47,7 @@ export default async function PublicProfilePage({ params }: Ctx) {
               {profile.organization && <p className="mt-1 text-sm text-slate-400">{profile.organization}</p>}
             </div>
           </div>
-          <CopyLinkButton url={`${siteUrl()}/@${profile.username}`} label="Copy profile link" />
+          <CopyLinkButton url={`${origin}/@${profile.username}`} label="Copy profile link" />
         </div>
         {profile.bio && <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-300">{profile.bio}</p>}
         <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">

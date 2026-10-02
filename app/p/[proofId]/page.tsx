@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { supabaseServer } from "@/lib/supabase-server";
-import { proofPublicUrl, qrDataUrl } from "@/lib/site";
+import { qrDataUrl } from "@/lib/site";
+import { requestProofUrl } from "@/lib/site-server";
 import { GlassCard, StatusBadge, SectionTitle, CoverageRing, CheckIcon } from "@/components/ui";
 import SnapshotCard from "@/components/SnapshotCard";
 import FileEvidenceButton from "@/components/FileEvidenceButton";
@@ -33,7 +34,7 @@ export default async function PublicProofPage({ params }: Ctx) {
     sb.from("pf_profiles").select("username, name").eq("id", proof.owner_id).maybeSingle(),
   ]);
 
-  const publicUrl = proofPublicUrl(proof.proof_id);
+  const publicUrl = await requestProofUrl(proof.proof_id);
   const creatorName = (creator as { name?: string | null } | null)?.name ?? "Proofly user";
   const creatorUsername = (creator as { username?: string | null } | null)?.username;
   const verifiedAt = checks?.[0]?.checked_at ? new Date(checks[0].checked_at).toLocaleDateString() : null;

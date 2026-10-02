@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { GlassCard, Field, inputCls, btnPrimary } from "@/components/ui";
 import { CopyLinkButton } from "@/components/proof-actions";
-import { siteUrl } from "@/lib/site";
 
 export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
@@ -70,7 +69,7 @@ export default function ProfilePage() {
         {f.username && (
           <div className="flex items-center gap-2">
             <Link href={`/@${f.username}`} className="text-sm font-medium text-cyan-300 hover:underline">View public profile →</Link>
-            <CopyLinkButton url={`${siteUrl()}/@${f.username}`} label="Copy" />
+            <CopyLinkButton url={`${typeof window !== "undefined" ? window.location.origin : ""}/@${f.username}`} label="Copy" />
           </div>
         )}
       </div>

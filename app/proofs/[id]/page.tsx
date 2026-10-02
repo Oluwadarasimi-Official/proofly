@@ -1,7 +1,8 @@
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { supabaseServer, currentUser } from "@/lib/supabase-server";
-import { proofPublicUrl, qrDataUrl } from "@/lib/site";
+import { qrDataUrl } from "@/lib/site";
+import { requestProofUrl } from "@/lib/site-server";
 import { GlassCard, StatusBadge, SectionTitle, CoverageRing, CheckIcon } from "@/components/ui";
 import SnapshotCard from "@/components/SnapshotCard";
 import EvidenceManager from "@/components/EvidenceManager";
@@ -45,7 +46,7 @@ export default async function ManageProofPage({ params }: Ctx) {
     verifierNames = Object.fromEntries((vps ?? []).map((p) => [p.id, p.name ?? (p.username ? `@${p.username}` : "verifier")]));
   }
 
-  const publicUrl = proofPublicUrl(proof.proof_id);
+  const publicUrl = await requestProofUrl(proof.proof_id);
   const creator = (prof as { name?: string | null; username?: string | null } | null)?.name ?? "Proofly user";
   const latestCheckAt = checks?.[0]?.checked_at ? new Date(checks[0].checked_at).toLocaleString() : null;
   const openDisputes = (disputes ?? []).filter((d) => d.status === "open");
@@ -108,8 +109,8 @@ export default async function ManageProofPage({ params }: Ctx) {
           </div>
           {latestCheckAt && <p className="mt-3 text-xs text-slate-500">Last run: {latestCheckAt}</p>}
           <div className="mt-4">
-            <AiAssist mode="analyze_evidence" getInput={() => ({ claim: proof.claim, evidence: evidence ?? [] })} />
-            <AiAssist mode="flag_inconsistencies" getInput={() => ({ claim: proof.claim, description: proof.description, evidence: evidence ?? [] })} />
+            <AiAssist mode="analyze_evidence" input={{ claim: proof.claim, evidence: evidence ?? [] }} />
+            <AiAssist mode="flag_inconsistencies" input={{ claim: proof.claim, description: proof.description, evidence: evidence ?? [] }} />
           </div>
         </GlassCard>
       </div>
